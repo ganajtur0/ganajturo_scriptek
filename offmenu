@@ -1,0 +1,27 @@
+#!/bin/bash
+
+screenoff="Képernyő ki"
+hibernate="Alvó állapot"
+poweroff="Kikapcsolás"
+reboot="Újraindítás"
+
+ANSWER=$(echo -e "$screenoff\n$hibernate\n$reboot\n$poweroff" | dmenu -i -l 4)
+
+case "$ANSWER" in
+	"$screenoff")
+		xset dpms force off
+		exit 0
+		;;
+	"$hibernate")
+		sudo zzz
+		exit 0
+		;;
+	"$poweroff")
+		sudo poweroff
+		exit 0
+		;;
+	"$reboot")
+		sudo reboot
+		exit 0
+		;;
+esac

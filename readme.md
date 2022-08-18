@@ -1,0 +1,1 @@
+# Nagyszerű shell-scriptek

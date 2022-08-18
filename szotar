@@ -1,0 +1,90 @@
+#!/bin/bash
+
+# felhasznált szakirodalom: https://stackoverflow.com/questions/20815433/how-can-i-check-in-a-bash-script-if-some-software-is-installed-or-not
+SCRIPTNAME="${0##*/}"
+
+warn() {
+    printf >&2 "$SCRIPTNAME: $*\n"
+}
+
+iscmd() {
+    command -v >&- "$@"
+}
+
+checkdeps() {
+    local -i not_found
+    for cmd; do
+        iscmd "$cmd" || {
+            warn $"$cmd nem található"
+            let not_found++
+        }
+    done
+    (( not_found == 0 )) || {
+        warn $"$SCRIPTNAME használatához telepíteni kell a fentebb látható hiányzó programokat!"
+        exit 1
+    }
+}
+
+# függőségek vizsgálata
+checkdeps pup curl
+
+usage(){
+    printf "%s"\
+"Használat:$SCRIPTNAME [zászló] <szó>
+    Zászlók:
+        -h                  ezen üzenet kiirattatása
+        -f                  forrásnyelv
+        -c                  célnyelv
+    Elérhető nyelvek:
+        - angol     (en)
+        - német     (de)
+        - magyar    (hu)
+"
+}
+
+EN="angol"
+DE="nemet"
+HU="magyar"
+
+BASE_URL="https://topszotar.hu/"
+
+# angol-magyar szótár az alapértelmezett
+SRC_LANG="$EN"
+DST_LANG="$HU"
+
+while getopts "hf:c:" option; do
+    case $option in
+        h) usage; exit 0 ;;
+        f) SRC_LANG="$OPTARG" ;;
+        c) DST_LANG="$OPTARG" ;;
+        *) usage ; exit 1 ;;
+    esac
+done
+
+shift $(($OPTIND -1))
+
+if [ -z "$1" ]; then
+    warn "Nem adtál meg fordítandó szót!"
+    usage
+    exit 1
+fi
+
+WORD="$1"
+
+# az oldal automatikusan beállítja a fordítási irányt
+
+echo "Fordítás..."
+
+URL="$BASE_URL$SRC_LANG$DST_LANG/$WORD"
+
+echo "$URL"
+
+result=$(curl -s -L $URL | pup --charset "utf-8" "a.linktootherdict text{}")
+
+if [ ! -n "$result" ];then
+   warn "Nincs találat!"
+   exit 1
+fi
+
+printf '%s\n' "${result[@]}"
+

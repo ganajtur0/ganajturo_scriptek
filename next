@@ -1,0 +1,10 @@
+#!/bin/bash
+
+[ ! -f .last_viewed ] && { touch .last_viewed; echo 0 > .last_viewed; }
+
+echo $(cat .last_viewed | python -c 'import sys; print(str(int(sys.stdin.read())+1).zfill(2))') > .last_viewed
+num=$(cat .last_viewed)
+
+echo $num > .last_viewed &&
+
+mpv "$(ls | perl -ne 'print if /[e|E| ]0?'${num}'.*\.m(kv)?(p4)?(ov)?/')"

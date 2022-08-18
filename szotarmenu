@@ -1,0 +1,23 @@
+#!/bin/bash
+
+BASE_URL="https://topszotar.hu/"
+WORKING_DIR="$HOME/.szotar"
+HIST_FILE="$WORKING_DIR/elozmeny"
+
+WORD="$(printf '' | dmenu -f -p 'Fordítandó:' )"
+
+grep -Fxq "$WORD" "$HIST_FILE" && is_new=false || is_new=true
+
+$is_new && echo "$WORD" >> "$HIST_FILE" || { cat "$WORKING_DIR/$WORD" | dmenu -l 10; exit 0; }
+
+URL="${BASE_URL}angolmagyar/${WORD}"
+
+result=$(curl -s -L $URL | pup --charset "utf-8" "a.linktootherdict text{}")
+
+[ ! -n "$result" ] && { echo "Nincs találat!" | dmenu; exit 1; }
+
+formatted=$(printf '%s\n' "${result[@]}")
+
+touch "$WORKING_DIR/$WORD" && printf "$formatted" > "$WORKING_DIR/$WORD"
+
+printf "$formatted" | dmenu -l 10
