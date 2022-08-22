@@ -33,8 +33,10 @@ def main():
 
     colors = 4
     if args.colors:
-        colors = colorgram.extract(args.image, args.colors)
-        display_colors(colors)
+        colors = args.colors
+        
+    colors = colorgram.extract(args.image, colors)
+    display_colors(colors)
 
 if __name__ == '__main__':
     main()
