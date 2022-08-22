@@ -21,3 +21,7 @@
 :art: [color_extractor.py](https://github.com/ganajtur0/ganajturo_scriptek/blob/master/color_extractor.py): egy megadott kép legjellemzőbb színeit mutatja könnyen feldolgozató és látható formában
 
 :snake: függőségek: [colorgram.py](https://pypi.org/project/colorgram.py/)
+
+:cd: [album-splitter.py](https://github.com/ganajtur0/ganajturo_scriptek/blob/master/color_extractor.py): darabjaira szedi a megadott albumot utasítás szerint
+
+:snake: függőségek: [eyed3](https://pypi.org/project/eyed3/)
