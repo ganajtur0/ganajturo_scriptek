@@ -2,13 +2,17 @@
 
 BASE_URL="https://topszotar.hu/"
 WORKING_DIR="$HOME/.szotar"
-HIST_FILE="$WORKING_DIR/elozmeny"
+HIST_DIR="$WORKING_DIR/elozmeny"
 
 WORD="$(printf '' | dmenu -f -p 'Fordítandó:' )"
 
-grep -Fxq "$WORD" "$HIST_FILE" && is_new=false || is_new=true
+LETTER=$(echo "${WORD:0:1}" | tr '[:upper:]' '[:lower:]')
 
-$is_new && echo "$WORD" >> "$HIST_FILE" || { cat "$WORKING_DIR/$WORD" | dmenu -l 10; exit 0; }
+[ -d "$WORKING_DIR/$LETTER" ] && \
+{ grep -Fxq "$WORD" "$HIST_DIR/$LETTER" && is_new=false || is_new=true; } || \
+mkdir "$WORKING_DIR/$LETTER"
+
+$is_new && echo "$WORD" >> "$HIST_DIR/$LETTER" || { cat "$WORKING_DIR/$LETTER/$WORD" | dmenu -l 10; exit 0; }
 
 URL="${BASE_URL}angolmagyar/${WORD}"
 
@@ -18,6 +22,6 @@ result=$(curl -s -L $URL | pup --charset "utf-8" "a.linktootherdict text{}")
 
 formatted=$(printf '%s\n' "${result[@]}")
 
-touch "$WORKING_DIR/$WORD" && printf "$formatted" > "$WORKING_DIR/$WORD"
+touch "$WORKING_DIR/$LETTER/$WORD" && printf "$formatted" > "$WORKING_DIR/$LETTER/$WORD"
 
 printf "$formatted" | dmenu -l 10
