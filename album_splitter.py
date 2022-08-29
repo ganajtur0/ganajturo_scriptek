@@ -55,7 +55,10 @@ def main():
     track_list = args.tracklist_file
     template = args.template.split(',')
     cover_art = args.cover_art
-    dest = path.abspath(path.expanduser(args.dest))
+    if not args.dest:
+        dest = "."
+    else:
+        dest = path.abspath(path.expanduser(args.dest))
 
     extension = original_track.split('.')[-1]
     
@@ -88,7 +91,6 @@ def main():
         if onlytwo:
 
             length = (subprocess.check_output('ffmpeg -i '+original_track+' 2>&1 | grep Duration | awk \'{print$2}\'', shell=True)[:-2]).decode("ascii")
-
             starts = []
             ends   = []
             names  = []
@@ -114,7 +116,9 @@ def main():
                 # use subprocess to execute the command in the shell
                 subprocess.call(command, shell=True)
 
-                set_tags(dest+'/'+str(i)+".mp3", name, album_name, artist_name, i+1 , cover_art)
+                if extension not in ['mp3', 'flac']:
+                    continue
+                set_tags(dest+'/'+str(i)+'.'+extension, name, album_name, artist_name, i+1 , cover_art)
 
 
         for i,line in enumerate(f):
@@ -132,7 +136,9 @@ def main():
             # use subprocess to execute the command in the shell
             subprocess.call(command, shell=True)
 
-            set_tags(dest+'/'+str(i)+".mp3", name, album_name, artist_name, i+1 , cover_art)
+            if extension not in ['mp3', 'flac']:
+                continue
+            set_tags(dest+'/'+str(i)+'.'+extension, name, album_name, artist_name, i+1 , cover_art)
 
 
 if __name__ == '__main__':
