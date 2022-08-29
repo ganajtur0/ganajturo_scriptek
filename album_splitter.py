@@ -4,6 +4,7 @@ import subprocess
 import sys
 import eyed3
 import argparse
+from os import path
 
 def set_tags(filename, title, album_name, artist_name, index, cover=None):
 
@@ -41,6 +42,7 @@ def main():
     required.add_argument("--album", help="Title of the album.", required=True)
 
     optional.add_argument("--cover_art", help="The album's cover art.")
+    optional.add_argument("--dest", help="Destination directory.")
 
     args = parser.parse_args()
 
@@ -53,6 +55,7 @@ def main():
     track_list = args.tracklist_file
     template = args.template.split(',')
     cover_art = args.cover_art
+    dest = path.abspath(path.expanduser(args.dest))
 
     extension = original_track.split('.')[-1]
     
@@ -70,14 +73,14 @@ def main():
 
     else:
         sindex = template.index('start')
-        nindex   = template.index('name')
-        eindex    = template.index('end')
+        nindex = template.index('name')
+        eindex = template.index('end')
         if sindex == -1 or nindex == -1 or eindex == -1:
             print('Error: Invalid template')
             return
 
     # create a template of the ffmpeg call in advance
-    cmd_string = 'ffmpeg -i {tr} -acodec copy -ss {st} -to {en} {nm}.'+extension
+    cmd_string = 'ffmpeg -i {tr} -acodec copy -ss {st} -to {en} '+dest+'/{nm}.'+extension
 
     # read each line of the track list and split into start, end, name
     with open(track_list, 'r') as f:
@@ -106,14 +109,13 @@ def main():
             ends.append(length)
 
             for i,name in enumerate(names):
-                command = cmd_string.format(tr=original_track, st=starts[i], en=ends[i+1], nm=(str(i)) )
+                command = cmd_string.format(tr=original_track, st=starts[i], en=ends[i+1], nm=str(i) )
 
                 # use subprocess to execute the command in the shell
                 subprocess.call(command, shell=True)
 
-                set_tags(str(i)+".mp3", name, album_name, artist_name, i+1 , cover_art)
-                # print(command)
-            return None
+                set_tags(dest+'/'+str(i)+".mp3", name, album_name, artist_name, i+1 , cover_art)
+
 
         for i,line in enumerate(f):
             # skip comment and empty lines
@@ -130,9 +132,7 @@ def main():
             # use subprocess to execute the command in the shell
             subprocess.call(command, shell=True)
 
-
-        return None
-
+            set_tags(dest+'/'+str(i)+".mp3", name, album_name, artist_name, i+1 , cover_art)
 
 
 if __name__ == '__main__':
