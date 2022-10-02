@@ -1,0 +1,11 @@
+#!/bin/bash
+
+URL="http://helyesiras.mta.hu/helyesiras/default/kulegy?q="
+q="$1"
+
+for i in $(seq 2 "$#"); do
+	q+="+${!i}"
+done
+
+curl -s -k -L "$URL""$q" | pup --charset "utf-8" "#result_xhtml" | w3m -dump -T text/html
+

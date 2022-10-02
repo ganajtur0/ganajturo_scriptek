@@ -121,24 +121,25 @@ def main():
                 set_tags(dest+'/'+str(i)+'.'+extension, name, album_name, artist_name, i+1 , cover_art)
 
 
-        for i,line in enumerate(f):
-            # skip comment and empty lines
-            if line.startswith('#') or len(line) <= 1:
-                continue
+        else:
+            for i,line in enumerate(f):
+                # skip comment and empty lines
+                if line.startswith('#') or len(line) <= 1:
+                    continue
 
-            # create command string for a given track
-            split_line = line.strip().split(";")
-            start = split_line[sindex]
-            name  = split_line[nindex]
-            end   = split_line[eindex]
-            command = cmd_string.format(tr=original_track, st=start, en=end, nm=str(i))
+                # create command string for a given track
+                split_line = line.strip().split(";")
+                start = split_line[sindex]
+                name  = split_line[nindex]
+                end   = split_line[eindex]
+                command = cmd_string.format(tr='"'+original_track+'"', st=start, en=end, nm=str(i))
 
-            # use subprocess to execute the command in the shell
-            subprocess.call(command, shell=True)
+                # use subprocess to execute the command in the shell
+                subprocess.call(command, shell=True)
 
-            if extension not in ['mp3', 'flac']:
-                continue
-            set_tags(dest+'/'+str(i)+'.'+extension, name, album_name, artist_name, i+1 , cover_art)
+                if extension not in ['mp3', 'flac']:
+                    continue
+                set_tags(dest+'/'+str(i)+'.'+extension, name, album_name, artist_name, i+1 , cover_art)
 
 
 if __name__ == '__main__':
