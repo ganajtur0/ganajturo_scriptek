@@ -14,6 +14,8 @@
 
 :snake: függőségek: [tabulate](https://pypi.org/project/tabulate/)
 
+:pencil: [kulegy](https://github.com/ganajtur0/ganajturo_scriptek/blob/master/kulegy): az MTA [*külön vagy egybe*](https://helyesiras.mta.hu/helyesiras/default/kulegy) eszközének használatát könnyíti meg
+
 ## Egyéb
 
 :tv: [next](https://github.com/ganajtur0/ganajturo_scriptek/blob/master/next): adott mappában lévő videófájlok közül játssza le a sorozat következő epizódját, ha a fájlok egy adott [regex](https://en.wikipedia.org/wiki/Regular_expression) mintának megfelelnek.
