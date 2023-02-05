@@ -79,7 +79,7 @@ URL="$BASE_URL$SRC_LANG$DST_LANG/$WORD"
 
 echo "$URL"
 
-result=$(curl -s -L $URL | pup --charset "utf-8" "a.linktootherdict text{}")
+result=$(curl -k -s -L $URL | pup --charset "utf-8" "a.linktootherdict text{}")
 
 if [ ! -n "$result" ];then
    warn "Nincs találat!"

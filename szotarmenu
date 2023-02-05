@@ -16,7 +16,7 @@ $is_new && echo "$WORD" >> "$HIST_DIR/$LETTER" || { cat "$WORKING_DIR/$LETTER/$W
 
 URL="${BASE_URL}angolmagyar/${WORD}"
 
-result=$(curl -s -L $URL | pup --charset "utf-8" "a.linktootherdict text{}")
+result=$(curl -k -s -L $URL | pup --charset "utf-8" "a.linktootherdict text{}")
 
 [ ! -n "$result" ] && { echo "Nincs találat!" | dmenu; exit 1; }
 
