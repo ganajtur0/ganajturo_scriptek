@@ -11,7 +11,16 @@ import os
 api_url="https://menetrendek.hu/menetrend/interface/index.php"
 
 def megallo_query(q):
-    r = requests.post(api_url, json={"func":"getStationOrAddrByText", "params":{"inputText":q}})
+    r = requests.post(api_url, json={"func":"getStationOrAddrByTextC",
+                                     "params":{
+                                         "inputText":q,
+                                         },
+                                         "networks":[1,2,3,10,11,12,13,14,24,25],
+                                         "searchIn":["stations"],
+                                         "searchDate":datetime.today().strftime("%Y-%m-%d"),
+                                         "maxResults":50,
+                                     },)
+    print(r.json())
     return r.json()["results"]
 
 def route_query(datum, honnan, hova):
