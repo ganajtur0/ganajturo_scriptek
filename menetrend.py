@@ -20,7 +20,6 @@ def megallo_query(q):
                                          "searchDate":datetime.today().strftime("%Y-%m-%d"),
                                          "maxResults":50,
                                      },)
-    print(r.json())
     return r.json()["results"]
 
 def route_query(datum, honnan, hova):
