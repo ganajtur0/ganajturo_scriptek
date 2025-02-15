@@ -7,4 +7,4 @@ num=$(cat .last_viewed)
 
 echo $num > .last_viewed &&
 
-mpv "$(ls | perl -ne 'print if /[e|E| ]0?'${num}'.*\.m(kv)?(p4)?(ov)?/')"
+mpv "$(ls | perl -ne 'print if /[e|E]0?'${num}'.*\.m(kv)?(p4)?(ov)?/')"
